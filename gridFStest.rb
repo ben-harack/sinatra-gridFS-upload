@@ -17,7 +17,7 @@ get '/hi' do
   "Hello World"
 end
 
-get "/uploaded" do
+get "/most_recent_upload" do
   # Get the file handle from gridfs
   file = grid.get($id)
   # Set the content type to generic
