@@ -18,13 +18,13 @@ get '/hi' do
 end
 
 get "/uploaded" do
+  # Get the file handle from gridfs
   file = grid.get($id)
-  return "content_type=#{file.content_type} <br>" \
-  " file.metadata.inspect=#{file.metadata.inspect} <br>"\
-  " file.chunk_size=#{file.chunk_size} <br>"\
-  " file.file_length=#{file.file_length} <br>"\
-  " file.filename=#{file.filename} <br>"\
-  " <PRE> file.data=#{file.data} </PRE>"
+  # Set the content type to generic
+  content_type 'application/octet-stream'  
+  #Push the file at the browser
+  attachment "#{file.filename}"
+  response.write file.read  
 end
  
 # Handle GET-request (Show the upload form)
@@ -35,12 +35,10 @@ end
 # Handle POST-request (Receive and save the uploaded file)
 post "/upload" do 
   $id = grid.put(params['myfile'][:tempfile].read, :filename => params['myfile'][:filename])
-
-  
-  # File.open('uploads/' + params['myfile'][:filename], "w") do |f|
-  #   f.write(params['myfile'][:tempfile].read)
-  # end
-
   return "The file was successfully uploaded! id=#{$id}"
 end
+
+
+  
+
 
